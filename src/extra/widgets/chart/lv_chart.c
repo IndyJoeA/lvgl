@@ -367,6 +367,8 @@ lv_chart_series_t * lv_chart_add_series(lv_obj_t * obj, lv_color_t color, lv_cha
     }
 
     ser->start_point = 0;
+    ser->upcoming_point = LV_CHART_POINT_NONE;
+    ser->clear_upcoming = 0;
     ser->y_ext_buf_assigned = false;
     ser->hidden = 0;
     ser->x_axis_sec = axis & LV_CHART_AXIS_SECONDARY_X ? 1 : 0;
@@ -406,6 +408,13 @@ void lv_chart_hide_series(lv_obj_t * chart, lv_chart_series_t * series, bool hid
     lv_chart_refresh(chart);
 }
 
+void lv_chart_set_autoclear(lv_obj_t * chart, lv_chart_series_t * series, bool clear)
+{
+    LV_ASSERT_OBJ(chart, MY_CLASS);
+    LV_ASSERT_NULL(series);
+
+    series->clear_upcoming = clear ? 1 : 0;
+}
 
 void lv_chart_set_series_color(lv_obj_t * chart, lv_chart_series_t * series, lv_color_t color)
 {
@@ -546,6 +555,20 @@ void lv_chart_set_next_value(lv_obj_t * obj, lv_chart_series_t * ser, lv_coord_t
     invalidate_point(obj, ser->start_point);
     ser->start_point = (ser->start_point + 1) % chart->point_cnt;
     invalidate_point(obj, ser->start_point);
+}
+
+void lv_chart_set_upcoming_value(lv_chart_series_t * ser, lv_coord_t value)
+{
+    LV_ASSERT_NULL(ser);
+
+    ser->upcoming_point = value;
+}
+
+void lv_chart_advance_value(lv_obj_t * obj, lv_chart_series_t * ser)
+{
+    lv_chart_set_next_value(obj, ser, ser->upcoming_point);
+
+    if(ser->clear_upcoming) ser->upcoming_point = LV_CHART_POINT_NONE;
 }
 
 void lv_chart_set_next_value2(lv_obj_t * obj, lv_chart_series_t * ser, lv_coord_t x_value, lv_coord_t y_value)

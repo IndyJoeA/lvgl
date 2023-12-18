@@ -13,6 +13,7 @@
 #include "../lvgl.h"
 #include "../misc/lv_fs.h"
 #include "lv_font_loader.h"
+#include <esp_heap_caps.h>
 
 /**********************
  *      TYPEDEFS
@@ -414,7 +415,8 @@ static int32_t load_glyph(lv_fs_file_t * fp, lv_font_fmt_txt_dsc_t * font_dsc,
         }
     }
 
-    uint8_t * glyph_bmp = (uint8_t *)lv_mem_alloc(sizeof(uint8_t) * cur_bmp_size);
+    //uint8_t * glyph_bmp = (uint8_t *)lv_mem_alloc(sizeof(uint8_t) * cur_bmp_size);
+    uint8_t * glyph_bmp = (uint8_t *)heap_caps_malloc(sizeof(uint8_t) * cur_bmp_size, MALLOC_CAP_SPIRAM);
 
     font_dsc->glyph_bitmap = glyph_bmp;
 

@@ -71,6 +71,8 @@ typedef uint8_t lv_chart_axis_t;
 typedef struct {
     lv_coord_t * x_points;
     lv_coord_t * y_points;
+    lv_coord_t upcoming_point;
+    uint8_t clear_upcoming : 1;
     lv_color_t color;
     uint16_t start_point;
     uint8_t hidden : 1;
@@ -291,6 +293,14 @@ void lv_chart_remove_series(lv_obj_t * obj, lv_chart_series_t * series);
 void lv_chart_hide_series(lv_obj_t * chart, lv_chart_series_t * series, bool hide);
 
 /**
+ * Enable auto clearing of series upcoming value
+ * @param obj       pointer to a chart object.
+ * @param series    pointer to a series object
+ * @param clear     true: clear the upcoming value
+ */
+void lv_chart_set_autoclear(lv_obj_t * chart, lv_chart_series_t * series, bool clear);
+
+/**
  * Change the color of a series
  * @param obj       pointer to a chart object.
  * @param series    pointer to a series object
@@ -375,6 +385,20 @@ void lv_chart_set_all_value(lv_obj_t * obj, lv_chart_series_t * ser, lv_coord_t 
  * @param value     the new value of the next data
  */
 void lv_chart_set_next_value(lv_obj_t * obj, lv_chart_series_t * ser, lv_coord_t value);
+
+/**
+ * Set the series next upcoming value
+ * @param ser       pointer to a data series on 'chart'
+ * @param value     the new value of the next data
+ */
+void lv_chart_set_upcoming_value(lv_chart_series_t * ser, lv_coord_t value);
+
+/**
+ * Advance the value as set by the upcoming value
+ * @param obj       pointer to chart object
+ * @param ser       pointer to a data series on 'chart'
+ */
+void lv_chart_advance_value(lv_obj_t * obj, lv_chart_series_t * ser);
 
 /**
  * Set the next point's X and Y value according to the update mode policy.
